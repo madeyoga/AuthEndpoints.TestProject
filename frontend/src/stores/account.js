@@ -6,10 +6,13 @@ import { router } from "../routers/index"
 export const useAccountStore = defineStore('counter', {
   state: () => {
     return {
-      account: JSON.parse(localStorage.getItem("account"))
+      user: JSON.parse(localStorage.getItem("user"))
     }
   },
   actions: {
+    isAuthenticated(){
+      return this.user != null
+    },
     async loadToken() {
 
     },
@@ -40,18 +43,18 @@ export const useAccountStore = defineStore('counter', {
         return error
       }
 
-      this.account = result.data
-      console.log(this.account)
+      this.user = result.data
+      console.log(this.user)
 
-      localStorage.setItem("account", JSON.stringify(this.account))
+      localStorage.setItem("user", JSON.stringify(this.user))
       
       router.replace("home")
 
-      return this.account
+      return this.user
     },
     logout() {
       this.user = null
-      localStorage.removeItem("account")
+      localStorage.removeItem("user")
     },
   },
 })
