@@ -56,7 +56,7 @@ export default {
     }
   },
   methods: {
-    register() {
+    async register() {
       const userData = {
         email: this.email,
         username: this.username,
@@ -64,11 +64,11 @@ export default {
         confirmPassword: this.confirmPassword,
       }
       
-      this.accountStore.register(userData)
+      await this.accountStore.register(userData)
     },
-    validate() {
+    async validate() {
       if (this.$refs.form.validate()) {
-        this.register()
+        await this.register()
       }
     },
   }

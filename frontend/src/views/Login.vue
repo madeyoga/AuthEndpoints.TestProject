@@ -3,6 +3,9 @@
     <v-row class="text-center">
       <v-col cols="12">
         <h1>Login Page</h1>
+        <v-alert prominent type="error" variant="outlined" v-if="showAlert">
+          Wrong username or password
+        </v-alert>
       </v-col>
       <v-col cols="12">
         <v-form ref="form" v-model="valid" lazy-validation>
@@ -23,6 +26,7 @@
 import logo from '../assets/logo.svg'
 import { useAccountStore } from '../stores/account'
 import { ref } from 'vue'
+import { router } from '../routers'
 
 export default {
   name: 'LoginView',
@@ -40,20 +44,27 @@ export default {
       passwordRules: ref([
         v => !!v || 'Password is required',
       ]),
+      showAlert: ref(false),
     }
   },
   methods: {
-    login() {
+    async login() {
       const credentials = {
         username: this.username,
         password: this.password,
       }
       console.log(credentials)
-      this.accountStore.login(credentials)
+      const result = await this.accountStore.login(credentials)
+      if (result.status === 200) {
+        router.replace("/")
+        return
+      }
+      // notify wrong password
+      this.showAlert = true
     },
-    validate() {
+    async validate() {
       if (this.$refs.form.validate()) {
-        this.login()
+        await this.login()
       }
     },
   }
