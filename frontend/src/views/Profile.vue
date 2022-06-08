@@ -1,24 +1,24 @@
 <template>
   <v-row class="text-center py-8">
     <v-col cols="12">
-      <h1>Your Profile</h1>
+      <h1 class="display-2 font-weight-bold">Your Profile</h1>
     </v-col>
 
     <v-col cols="12">
-      <h4>Identity</h4>
+      <h2 class="headline font-weight-bold" >Identity</h2>
       <p>{{ userData.id }}</p>
     </v-col>
 
     <v-col cols="12">
-      <h4>Email</h4>
+      <h2 class="headline font-weight-bold">Email</h2>
       <p>{{ userData.email }}</p>
     </v-col>
     <v-col cols="12">
-      <h4>Email confirmed</h4>
+      <h2 class="headline font-weight-bold">Email confirmed</h2>
       <p>{{ userData.emailConfirmed }}</p>
     </v-col>
     <v-col cols="12">
-      <h4>Two Factor Enabled</h4>
+      <h2 class="headline font-weight-bold">Two Factor Enabled</h2>
       <p>{{ userData.twoFactorEnabled }}</p>
     </v-col>
   </v-row>
