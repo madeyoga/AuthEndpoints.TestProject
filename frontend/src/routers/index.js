@@ -22,7 +22,6 @@ export const router = createRouter({
 
 const authRequiredRoutes = [
     'profile',
-    'email_confirm',
 ]
 
 const anonOnlyRoutes = [

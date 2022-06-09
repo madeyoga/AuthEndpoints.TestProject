@@ -32,9 +32,6 @@ export const useAccountStore = defineStore('counter', {
     isAuthenticated() {
       return this.user != null
     },
-    async loadToken() {
-
-    },
     async register(userData) {
       const url = "https://localhost:7004/users"
       
@@ -71,5 +68,18 @@ export const useAccountStore = defineStore('counter', {
       localStorage.removeItem("userData")
       delete axios.defaults.headers.common['Authorization'];
     },
+    async sendEmailVerification() {
+      const url = "https://localhost:7004/users/verify_email"
+
+      let result
+      try {
+        result = await axios.get(url)
+      } catch (error) {
+        console.log(error.response)
+        return error.response
+      }
+
+      return result
+    }
   },
 })

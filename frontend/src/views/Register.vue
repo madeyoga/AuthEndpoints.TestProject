@@ -3,6 +3,9 @@
     <v-row class="text-center">
       <v-col cols="12">
         <h1>Register Page</h1>
+        <v-alert type="info">
+          {{ note }}
+        </v-alert>
       </v-col>
       <v-col cols="12">
         <v-form ref="form" v-model="valid" lazy-validation>
@@ -53,6 +56,7 @@ export default {
       confirmPasswordRules: [
         v => !!v || 'Confirm password is required',
       ],
+      note: ref("Test"),
     }
   },
   methods: {
@@ -64,7 +68,14 @@ export default {
         confirmPassword: this.confirmPassword,
       }
       
-      await this.accountStore.register(userData)
+      const response = await this.accountStore.register(userData)
+
+      if (response.status === 200) {
+        this.note = "Successfully registered!"
+      }
+      else {
+        this.note = "Error occured!"
+      }
     },
     async validate() {
       if (this.$refs.form.validate()) {
