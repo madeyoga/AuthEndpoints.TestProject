@@ -37,8 +37,8 @@ builder.Services
     {
         options.Issuer = "https://localhost:7004";
         options.Audience = "http://localhost:3000";
-        options.EmailConfirmationUrl = "http://localhost:3000/account/email/confirm/{uid}/{token}";
-        options.PasswordResetUrl = "http://localhost:3000/account/password/reset/{uid}/{token}";
+        options.EmailConfirmationUrl = "http://localhost:3000/email_confirm/{uid}/{token}";
+        options.PasswordResetUrl = "http://localhost:3000/password_reset/{uid}/{token}";
         options.EmailOptions = new EmailOptions()
         {
             From = Environment.GetEnvironmentVariable("GOOGLE_MAIL_APP_USER")!,
