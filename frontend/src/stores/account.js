@@ -14,6 +14,8 @@ export const useAccountStore = defineStore('counter', {
       const url = "https://localhost:7004/users/me"
       let result
       
+      console.log(this.data)
+
       if (this.data !== null) {
         return this.data
       }
@@ -76,6 +78,24 @@ export const useAccountStore = defineStore('counter', {
         result = await axios.get(url)
       } catch (error) {
         console.log(error.response)
+        return error.response
+      }
+
+      return result
+    },
+    async confirmEmailVerification(uid, token) {
+      const payload = {
+        identity: uid,
+        token: token,
+      }
+
+      const url = "https://localhost:7004/users/verify_email_confirm"
+
+      let result
+
+      try {
+        result = await axios.post(url, payload)
+      } catch (error) {
         return error.response
       }
 
