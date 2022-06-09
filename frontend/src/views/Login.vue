@@ -6,6 +6,14 @@
         <v-alert prominent type="error" variant="outlined" v-if="showAlert">
           Wrong username or password
         </v-alert>
+        <v-container v-if="loading">
+          <v-progress-linear
+            color="primary" 
+            indeterminate 
+            rounded 
+            height="6"
+          ></v-progress-linear>
+        </v-container>
       </v-col>
       <v-col cols="12">
         <v-form ref="form" v-model="valid" lazy-validation>
@@ -13,7 +21,7 @@
           <v-text-field type="password" v-model="password" :rules="passwordRules" label="Password" required>
           </v-text-field>
 
-          <v-btn :disabled="!valid" color="success" class="mr-4" @click="validate">
+          <v-btn :disabled="!valid && !loading" color="success" class="mr-4" @click="validate">
             Validate
           </v-btn>
         </v-form>
@@ -34,7 +42,8 @@ export default {
     return {
       accountStore: useAccountStore(),
       logo,
-      valid: ref(true),
+      valid: ref(false),
+      loading: ref(false),
       username: ref(''),
       usernameRules: ref([
         v => !!v || 'Username is required',
@@ -61,8 +70,10 @@ export default {
       }
       // notify wrong password
       this.showAlert = true
+      this.loading = false
     },
     async validate() {
+      this.loading = true
       if (this.$refs.form.validate()) {
         await this.login()
       }

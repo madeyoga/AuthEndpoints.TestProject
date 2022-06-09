@@ -5,7 +5,7 @@
     </v-col>
 
     <v-col cols="12">
-      <h2 class="headline font-weight-bold" >Identity</h2>
+      <h2 class="headline font-weight-bold">Identity</h2>
       <p>{{ userData.id }}</p>
     </v-col>
 
@@ -25,10 +25,17 @@
 
   <v-row class="text-center">
     <v-col cols="12">
-      <v-btn color="primary" class="mx-2" v-if="!userData.emailConfirmed">Verify email</v-btn>
-      <v-btn color="primary" class="mx-2" v-if="!userData.twoFactorEnabled">Enable 2fa</v-btn>
+      <v-btn color="primary" class="mx-2" :disabled="userData.emailConfirmed"
+        @click="sendEmailVerification">Verify Email</v-btn>
+      <v-btn color="primary" class="mx-2" :disabled="userData.twoFactorEnabled">Enable 2fa</v-btn>
     </v-col>
   </v-row>
+
+  <v-col cols="12" v-if="showAlert">
+    <v-alert type="info" variant="outlined">
+      {{ alertNote }}
+    </v-alert>
+  </v-col>
 </template>
 
 <script>
@@ -40,6 +47,8 @@ export default {
   setup() {
     const accountStore = useAccountStore()
     const userData = ref({})
+    const alertNote = ref("")
+    const showAlert = ref(false)
 
     const fetchUserData = () => {
       accountStore.getUserData().then((res) => {
@@ -47,13 +56,38 @@ export default {
       })
     }
 
+    const sendEmailVerification = async () => {
+      const res = await accountStore.sendEmailVerification()
+      console.log(res)
+      if (res.status === 204) {
+        configureAlert(
+          true,
+          "Verification link has been sent to your email, please check your email and follow the verification steps."
+        )
+        return
+      }
+      configureAlert(
+        true,
+        "Error occured!"
+      )
+    }
+
+    const configureAlert = (show, note) => {
+      showAlert.value = show
+      alertNote.value = note
+    }
+
     onMounted(() => {
       fetchUserData()
     })
 
     return {
-      userData: userData,
+      userData,
       fetchUserData,
+      alertNote,
+      showAlert,
+      configureAlert,
+      sendEmailVerification
     }
   },
 }
