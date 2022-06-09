@@ -7,6 +7,8 @@
             <router-link to="/" class="mx-2">Home</router-link>
             <router-link to="login" class="mx-2">Login</router-link>
             <router-link to="register" class="mx-2">Register</router-link>
+            <router-link to="profile" class="mx-2">Profile</router-link>
+            <router-link to="/" @click="logout" v-if="accountStore.isAuthenticated()" class="mx-2">Logout</router-link>
           </v-col>
         </v-row>
       </v-container>
@@ -16,17 +18,34 @@
 </template>
 
 <script>
-import HelloWorld from './views/HelloWorld.vue'
+import axios from 'axios'
+import { router } from './routers'
+import { useAccountStore } from './stores/account'
+import { onMounted } from 'vue'
 
 export default {
   name: 'App',
 
-  components: {
-    HelloWorld,
-  },
+  setup() {
+    const accountStore = useAccountStore()
 
-  data: () => ({
-    //
-  }),
+    onMounted(() => {
+      if (accountStore.isAuthenticated()) {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${accountStore.user.accessToken}`;
+        return
+      }
+      console.log("User is null")
+    })
+
+    const logout = () => {
+      accountStore.logout()
+      router.replace("/login")
+    }
+
+    return {
+      accountStore,
+      logout
+    }
+  },
 }
 </script>

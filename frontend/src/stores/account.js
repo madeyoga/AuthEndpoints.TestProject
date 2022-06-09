@@ -1,33 +1,52 @@
 // stores/counter.js
 import { defineStore } from 'pinia'
 import axios from "axios"
-import { router } from "../routers/index"
 
 export const useAccountStore = defineStore('counter', {
   state: () => {
     return {
-      account: JSON.parse(localStorage.getItem("account"))
+      user: JSON.parse(localStorage.getItem("user")),
+      data: JSON.parse(localStorage.getItem("userData")),
     }
   },
   actions: {
+    async getUserData() {
+      const url = "https://localhost:7004/users/me"
+      let result
+      
+      if (this.data !== null) {
+        return this.data
+      }
+
+      try {
+        result = await axios.get(url)
+      } catch (error) {
+        return error.response
+      }
+
+      this.data = result.data
+      localStorage.setItem("userData", JSON.stringify(this.data))
+
+      return result.data
+    },
+    isAuthenticated() {
+      return this.user != null
+    },
     async loadToken() {
 
     },
     async register(userData) {
       const url = "https://localhost:7004/users"
-
+      
+      let result
       try {
-        let result = await axios.post(url, userData)
+        result = await axios.post(url, userData)
       } catch (error) {
         console.log(error)
-        return false
+        return error.response
       }
 
-      console.log(result)
-
-      router.replace("login")
-
-      return true
+      return result
     },
     async login(credentials) {
       const url = "https://localhost:7004/jwt/create"
@@ -36,22 +55,21 @@ export const useAccountStore = defineStore('counter', {
       try {
         result = await axios.post(url, credentials)
       } catch (error) {
-        console.log(error)
-        return error
+        console.log(error.response)
+        return error.response
       }
 
-      this.account = result.data
-      console.log(this.account)
+      this.user = result.data
+      localStorage.setItem("user", JSON.stringify(this.user))
+      axios.defaults.headers.common['Authorization'] = `Bearer ${this.user.accessToken}`
 
-      localStorage.setItem("account", JSON.stringify(this.account))
-      
-      router.replace("home")
-
-      return this.account
+      return result
     },
     logout() {
       this.user = null
-      localStorage.removeItem("account")
+      localStorage.removeItem("user")
+      localStorage.removeItem("userData")
+      delete axios.defaults.headers.common['Authorization'];
     },
   },
 })
