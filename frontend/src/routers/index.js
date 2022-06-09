@@ -4,6 +4,7 @@ import HelloWorld from "../views/HelloWorld.vue";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import Profile from "../views/Profile.vue";
+import EmailConfirm from "../views/EmailConfirm.vue";
 
 export const router = createRouter({
     history: createWebHistory(),
@@ -13,11 +14,15 @@ export const router = createRouter({
         { path: '/register', name: "register", component: Register },
         { path: '/2fa_confirm', name: "2fa_confirm", component: Login },
         { path: '/profile', name: "profile", component: Profile },
+        { path: '/email_confirm/:uid/:token', name: "email_confirm", component: EmailConfirm },
+        // { path: '/enable_2fa_confirm', name: "enable_2fa_confirm", component: Profile },
+        // { path: '/password_reset_confirm/:uid/:token', name: "password_reset_confirm", component: Profile },
     ]
 })
 
 const authRequiredRoutes = [
-    'profile'
+    'profile',
+    'email_confirm',
 ]
 
 const anonOnlyRoutes = [
@@ -29,6 +34,8 @@ router.beforeEach(async (to) => {
     const authRequired = authRequiredRoutes.includes(to.name)
     const account = useAccountStore()
     const isAuthenticated = account.isAuthenticated()
+
+    console.log(to.name)
 
     if (authRequired && !isAuthenticated){
         return '/login'
