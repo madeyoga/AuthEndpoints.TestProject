@@ -25,9 +25,10 @@
 
   <v-row class="text-center">
     <v-col cols="12">
-      <v-btn color="primary" class="mx-2" :disabled="userData.emailConfirmed"
-        @click="sendEmailVerification">Verify Email</v-btn>
-      <v-btn color="primary" class="mx-2" :disabled="userData.twoFactorEnabled">Enable 2fa</v-btn>
+      <v-btn color="primary" class="mx-2" :disabled="userData.emailConfirmed" @click="sendEmailVerification">Verify
+        Email</v-btn>
+      <v-btn color="primary" class="mx-2" :disabled="userData.twoFactorEnabled" @click="sendEnable2FAEmail">Enable 2fa
+      </v-btn>
     </v-col>
   </v-row>
 
@@ -42,6 +43,7 @@
 import { onMounted } from 'vue'
 import { ref } from '@vue/reactivity'
 import { useAccountStore } from '../stores/account'
+import { router } from '../routers'
 
 export default {
   setup() {
@@ -68,7 +70,21 @@ export default {
       }
       configureAlert(
         true,
-        "Error occured!"
+        "(SendEmailVerification) Error occured while processing your request!"
+      )
+    }
+
+    const sendEnable2FAEmail = async () => {
+      const result = await accountStore.sendEnable2faEmail()
+      console.log(result)
+      if (result.status === 200) {
+        router.replace('/enable_2fa_confirm')
+        return
+      }
+
+      configureAlert(
+        true,
+        "(Enabling 2fa) Error occured while processing your request!"
       )
     }
 
@@ -87,7 +103,8 @@ export default {
       alertNote,
       showAlert,
       configureAlert,
-      sendEmailVerification
+      sendEmailVerification,
+      sendEnable2FAEmail,
     }
   },
 }

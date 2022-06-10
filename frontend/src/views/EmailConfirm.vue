@@ -46,9 +46,6 @@ export default {
         alertNote.value = "Error occured while verifying email"
       }
 
-      console.log(result.status)
-      console.log(alertType.value)
-
       loading.value = false
       showAlert.value = true
     })

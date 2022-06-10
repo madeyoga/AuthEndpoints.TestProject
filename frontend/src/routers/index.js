@@ -5,6 +5,7 @@ import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import Profile from "../views/Profile.vue";
 import EmailConfirm from "../views/EmailConfirm.vue";
+import Enable2FAConfirm from "../views/Enable2FAConfirm.vue";
 
 export const router = createRouter({
     history: createWebHistory(),
@@ -15,13 +16,14 @@ export const router = createRouter({
         { path: '/2fa_confirm', name: "2fa_confirm", component: Login },
         { path: '/profile', name: "profile", component: Profile },
         { path: '/email_confirm/:uid/:token', name: "email_confirm", component: EmailConfirm },
-        // { path: '/enable_2fa_confirm', name: "enable_2fa_confirm", component: Profile },
+        { path: '/enable_2fa_confirm', name: "enable_2fa_confirm", component: Enable2FAConfirm },
         // { path: '/password_reset_confirm/:uid/:token', name: "password_reset_confirm", component: Profile },
     ]
 })
 
 const authRequiredRoutes = [
     'profile',
+    'enable_2fa_confirm',
 ]
 
 const anonOnlyRoutes = [
