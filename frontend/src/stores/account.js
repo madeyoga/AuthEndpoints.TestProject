@@ -11,14 +11,14 @@ export const useAccountStore = defineStore('counter', {
   },
   actions: {
     async getUserData() {
-      const url = "https://localhost:7004/users/me"
-      let result
-      
-      console.log(this.data)
-
       if (this.data !== null) {
         return this.data
       }
+      return await this.fetchUserData()
+    },
+    async fetchUserData() {
+      const url = "https://localhost:7004/users/me"
+      let result
 
       try {
         result = await axios.get(url)
@@ -99,6 +99,39 @@ export const useAccountStore = defineStore('counter', {
         return error.response
       }
 
+      return result
+    },
+    async sendEnable2faEmail() {
+      const url = "https://localhost:7004/users/enable_2fa"
+  
+      let result
+  
+      try {
+        result = await axios.get(url)
+      } catch (error) {
+        console.log(error)
+        return error.response
+      }
+  
+      return result
+    },
+    async enable2faConfirm(provider, token) {
+      const data = await this.getUserData()
+      const payload = {
+        email: data.email,
+        provider: provider,
+        token: token,
+      }
+  
+      const url = "https://localhost:7004/users/enable_2fa_confirm"
+  
+      let result
+      try {
+        result = await axios.post(url, payload)
+      } catch (error) {
+        return error.response
+      }
+  
       return result
     }
   },
