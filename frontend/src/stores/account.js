@@ -2,6 +2,8 @@
 import { defineStore } from 'pinia'
 import axios from "axios"
 
+export const axiosClient = axios.create()
+
 export const useAccountStore = defineStore('counter', {
   state: () => {
     return {
@@ -36,7 +38,7 @@ export const useAccountStore = defineStore('counter', {
     },
     async register(userData) {
       const url = "https://localhost:7004/users"
-      
+
       let result
       try {
         result = await axios.post(url, userData)
@@ -61,7 +63,7 @@ export const useAccountStore = defineStore('counter', {
       this.user = result.data
       localStorage.setItem("user", JSON.stringify(this.user))
       axios.defaults.headers.common['Authorization'] = `Bearer ${this.user.accessToken}`
-
+      console.log(result)
       return result
     },
     logout() {
@@ -103,16 +105,16 @@ export const useAccountStore = defineStore('counter', {
     },
     async sendEnable2faEmail() {
       const url = "https://localhost:7004/users/enable_2fa"
-  
+
       let result
-  
+
       try {
         result = await axios.get(url)
       } catch (error) {
         console.log(error)
         return error.response
       }
-  
+
       return result
     },
     async enable2faConfirm(provider, token) {
@@ -122,16 +124,50 @@ export const useAccountStore = defineStore('counter', {
         provider: provider,
         token: token,
       }
-  
+
       const url = "https://localhost:7004/users/enable_2fa_confirm"
-  
+
       let result
       try {
         result = await axios.post(url, payload)
       } catch (error) {
         return error.response
       }
-  
+
+      return result
+    },
+    async verifyAccessToken() {
+      const url = "https://localhost:7004/jwt/verify"
+
+      let result
+      try {
+        result = await axios.get(url)
+      } catch (error) {
+        return error.response
+      }
+
+      return result
+    },
+    async refreshAccessToken() {
+      const url = "https://localhost:7004/jwt/refresh"
+
+      const payload = {
+        refreshToken: this.user.refreshToken
+      }
+
+      let result
+
+      try {
+        result = await axios.post(url, payload)
+      } catch (error) {
+        this.logout()
+        return error.response
+      }
+
+      this.user = result.data
+      localStorage.setItem("user", JSON.stringify(this.user))
+      axios.defaults.headers.common['Authorization'] = `Bearer ${this.user.accessToken}`
+
       return result
     }
   },
