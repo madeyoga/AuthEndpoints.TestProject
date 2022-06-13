@@ -7,12 +7,7 @@
           Wrong username or password
         </v-alert>
         <v-container v-if="loading">
-          <v-progress-linear
-            color="primary" 
-            indeterminate 
-            rounded 
-            height="6"
-          ></v-progress-linear>
+          <v-progress-linear color="primary" indeterminate rounded height="6"></v-progress-linear>
         </v-container>
       </v-col>
       <v-col cols="12">
