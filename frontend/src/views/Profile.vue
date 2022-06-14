@@ -52,12 +52,6 @@ export default {
     const alertNote = ref("")
     const showAlert = ref(false)
 
-    const fetchUserData = () => {
-      accountStore.getUserData().then((res) => {
-        userData.value = res
-      })
-    }
-
     const sendEmailVerification = async () => {
       const res = await accountStore.sendEmailVerification()
       console.log(res)
@@ -93,13 +87,12 @@ export default {
       alertNote.value = note
     }
 
-    onMounted(() => {
-      fetchUserData()
+    onMounted(async () => {
+      userData.value = await accountStore.getUserData()
     })
 
     return {
       userData,
-      fetchUserData,
       alertNote,
       showAlert,
       configureAlert,

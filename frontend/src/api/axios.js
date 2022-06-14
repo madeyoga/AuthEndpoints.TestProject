@@ -11,22 +11,27 @@ axios.interceptors.request.use(
 
     request.headers.Authorization = `Bearer ${accountStore.user.accessToken}`
     console.log("Add token to header")
-  },
-  (error) => error,
+
+    return request
+  }
 )
 
 axios.interceptors.response.use(
   response => response,
   async (error) => {
+    if (!error.response) {
+      return Promise.reject(error)
+    }
+
     if (error.response.status !== 403) {
-      throw error
+      return Promise.reject(error)
     }
 
     const originalRequest = error.config;
 
     // Check if request is a retry
     if (originalRequest._retry) {
-      throw error
+      return Promise.reject(error)
     }
 
     originalRequest._retry = true
@@ -39,7 +44,7 @@ axios.interceptors.response.use(
 
     // if access token is not expired
     if (verifyResult.status === 200) {
-      throw error
+      return Promise.reject(error)
     }
 
     // if access token is expired
@@ -48,11 +53,13 @@ axios.interceptors.response.use(
 
     // if refresh token is not expired
     if (refreshResult.status === 200) {
-      throw error
+      return Promise.reject(error)
     }
 
     // if refresh token is also expired, then logout.
     console.log("Expired session, please login again")
     accountStore.logout()
+
+    return Promise.reject(error)
   }
 )
