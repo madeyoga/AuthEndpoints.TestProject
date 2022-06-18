@@ -9,3 +9,5 @@ updates:
     directory: "AuthEndpoints.TestProject/" # Location of package manifests
     schedule:
       interval: "daily"
+      time: "21:00"
+      timezone: "UTC"
