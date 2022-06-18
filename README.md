@@ -1,5 +1,5 @@
 # AuthEndpoints.TestProject
-Test project for AuthEndpoints package
+Demo project for AuthEndpoints package
 
 - Register
 - Login
