@@ -1,4 +1,5 @@
 using AuthEndpoints;
+using AuthEndpoints.MinimalApi;
 using AuthEndpoints.TestProject.Data;
 using AuthEndpoints.TestProject.Models;
 using Microsoft.AspNetCore.Identity;
@@ -48,6 +49,7 @@ builder.Services
             Password = Environment.GetEnvironmentVariable("GOOGLE_MAIL_APP_PASSWORD")!,
         };
     })
+    .AddAllEndpointDefinitions()
     .AddJwtBearerAuthScheme();
 
 builder.Services.AddCors(options =>
@@ -82,5 +84,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapAuthEndpoints();
 
 app.Run();
