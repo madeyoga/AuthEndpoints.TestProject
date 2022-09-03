@@ -32,7 +32,7 @@ builder.Services.AddIdentityCore<MyApplicationUser>(option =>
     option.Password.RequiredLength = 0;
 }).AddEntityFrameworkStores<MyDbContext>().AddDefaultTokenProviders();
 
-builder.Services.AddAuthEndpointsCore<MyApplicationUser>()
+builder.Services.AddAuthEndpointsCore<MyApplicationUser, MyDbContext>()
                 .AddBasicAuthenticationEndpoints()
                 .Add2FAEndpoints();
 
