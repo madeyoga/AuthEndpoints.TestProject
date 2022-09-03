@@ -1,5 +1,6 @@
-using AuthEndpoints;
+using AuthEndpoints.Core;
 using AuthEndpoints.MinimalApi;
+using AuthEndpoints.SimpleJwt;
 using AuthEndpoints.TestProject.Data;
 using AuthEndpoints.TestProject.Models;
 using Microsoft.AspNetCore.Identity;
@@ -29,28 +30,13 @@ builder.Services.AddIdentityCore<MyApplicationUser>(option =>
     option.Password.RequireNonAlphanumeric = false;
     option.Password.RequireUppercase = false;
     option.Password.RequiredLength = 0;
-})
-    .AddEntityFrameworkStores<MyDbContext>()
-    .AddDefaultTokenProviders();
+}).AddEntityFrameworkStores<MyDbContext>().AddDefaultTokenProviders();
 
-builder.Services
-    .AddAuthEndpoints<string, MyApplicationUser>(options =>
-    {
-        options.Issuer = "https://localhost:7004";
-        options.Audience = "http://localhost:3000";
-        options.EmailConfirmationUrl = "http://localhost:3000/email_confirm/{uid}/{token}";
-        options.PasswordResetUrl = "http://localhost:3000/password_reset/{uid}/{token}";
-        options.EmailOptions = new EmailOptions()
-        {
-            From = Environment.GetEnvironmentVariable("GOOGLE_MAIL_APP_USER")!,
-            Host = "smtp.gmail.com",
-            Port = 587,
-            User = Environment.GetEnvironmentVariable("GOOGLE_MAIL_APP_USER")!,
-            Password = Environment.GetEnvironmentVariable("GOOGLE_MAIL_APP_PASSWORD")!,
-        };
-    })
-    .AddAllEndpointDefinitions()
-    .AddJwtBearerAuthScheme();
+builder.Services.AddAuthEndpointsCore<MyApplicationUser>()
+                .AddBasicAuthenticationEndpoints()
+                .Add2FAEndpoints();
+
+builder.Services.AddSimpleJwtEndpoints<MyApplicationUser, MyDbContext>();
 
 builder.Services.AddCors(options =>
 {
@@ -85,6 +71,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapAuthEndpoints();
+app.MapEndpoints();
 
 app.Run();

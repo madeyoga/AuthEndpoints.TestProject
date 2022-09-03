@@ -12,15 +12,15 @@
     "@mdi/font": "5.9.55",
     "axios": "0.27.2",
     "pinia": "2.0.14",
-    "roboto-fontface": "*",
+    "roboto-fontface": "0.10.0",
     "vue": "^3.2.25",
     "vue-router": "4.0.15",
     "vuetify": "^3.0.0-beta.0",
-    "webfontloader": "^1.0.0"
+    "webfontloader": "1.6.28"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^2.3.1",
-    "vite": "^2.9.2",
+    "@vitejs/plugin-vue": "2.3.4",
+    "vite": "2.9.15",
     "vite-plugin-vuetify": "^1.0.0-alpha.0",
     "vue-cli-plugin-vuetify": "2.5.1"
   }
